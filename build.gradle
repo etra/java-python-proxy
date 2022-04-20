@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.8.17'
+}
+
+group 'com.javacube'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    runtimeOnly 'io.grpc:grpc-netty-shaded:1.45.1'
+    implementation 'io.grpc:grpc-protobuf:1.45.1'
+    implementation 'io.grpc:grpc-stub:1.45.1'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+
+}
+
+
+protobuf {
+    generatedFilesBaseDir = "$projectDir/src/main/java/generated"
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.19.2"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.45.1'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+task(runMain, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.cube.JavaCubeServer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+

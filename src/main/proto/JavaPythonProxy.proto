@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_package = "main.grpc";
+
+message Command {
+    string command = 1;
+}
+
+message Response {
+    string data = 1;
+}
+service JavaPythonProxy {
+    rpc execute(Command) returns (stream Response) {}
+}
